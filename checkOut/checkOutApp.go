@@ -21,6 +21,7 @@ var billTotal float64
 
 func main() {
 	collectInput()
+	calculateEachItemTotalPrice()
 
 }
 
