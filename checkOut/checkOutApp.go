@@ -8,7 +8,7 @@ import (
 var product []string
 var quantity []int
 var price []float64
-var total float64
+var total []float64
 
 var customerName string
 var amountPaid float64
