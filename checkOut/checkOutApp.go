@@ -31,6 +31,9 @@ func main() {
 	calculateVat()
 	getBillTotal()
 	printFirstReceiptAfterTheCustomerPaid()
+	amountUserPaid()
+	getBalance()
+	printPaymentReceipt()
 
 }
 
@@ -95,9 +98,9 @@ func calculateVat() float64 {
 	return vat
 }
 
-func getBillTotal() {
+func getBillTotal() float64{
 	billTotal = (subTotal - calculateDiscountAmount()) + calculateVat()
-
+	return billTotal
 }
 
 func printFirstReceiptAfterTheCustomerPaid() {
@@ -133,25 +136,74 @@ func printFirstReceiptAfterTheCustomerPaid() {
 
 	==================================================================================
 
-`, subTotal, discount, vat(), billTotal, billTotal)
+`, subTotal, calculateDiscountAmount(), calculateVat(), billTotal, billTotal)
+}
+
+func amountUserPaid() float64{
+	fmt.Print("How much did the user give to you? ")
+	fmt.Scan(&amountPaid)
+	return  amountPaid
 
 }
 
-//System.out.printf("""
-//
-//Sub total: %.2f
-//
-//Discount: %.2f
-//
-//VAT @ 17.50: %.2f
-//
-//
-//Bill total: %.2f
-//
-//==================================================================================
-//
-//THIS IS NOT A RECEIPT KINDLY PAY %.2f
-//==================================================================================
-//
-//""", subTotal, discount, vat, billTotal, billTotal);
-//
+func  getBalance() float64 {
+	balance = amountUserPaid() - getBillTotal();
+	return balance
+}
+
+func printPaymentReceipt()  {
+	fmt.Printf(`
+	SEMICOLON STORES +
+	MAIN BRANCH
+	LOCATION:312, HERBERT MACAULAY WAY, sABO yABA, LAGOS.
+	TEL:08364537281
+	Date:%s%n
+
+`, time.Now())
+	fmt.Printf("Cashier:%s\n customerName:%s\n", cashierName, customerName)
+	fmt.Println("====================================================================")
+	fmt.Printf("		%5s%12s%9s%12s\n\n", "ITEMS", "QUANTITY", "PRICE", " TOTAL")
+	fmt.Println("---------------------------------------------------------------------")
+	for i, prod := range product {
+		fmt.Printf("        %s%9d%9.2f%12.2f\n\n", prod, quantity[i], price[i], total[i])
+	}
+	fmt.Println("---------------------------------------------------------------------")
+
+	fmt.Printf(`
+	sub total : %.2f
+	
+	discount: %.2f
+
+	VAT @ 17.50: %.2f
+
+	==================================================================================
+	bill total : %.2f
+
+	amount paid:%.2f
+
+	balance: %.2f
+	==================================================================================
+
+	
+
+	==================================================================================
+
+			Thanks for your patronage
+
+	==================================================================================
+
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
