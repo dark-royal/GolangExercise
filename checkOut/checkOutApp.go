@@ -6,10 +6,12 @@ import (
 	"time"
 )
 
-var product []string
-var quantity []int
-var price []float64
-var total []float64
+type Product struct {
+	ProductName string
+	quantity    int
+	price       float64
+	total       float64
+}
 
 var customerName string
 var discount1 float64
@@ -19,7 +21,6 @@ var balance float64
 var cashierName string
 var subTotal float64
 var discount float64
-var discountedPrice float64
 var vat float64
 var billTotal float64
 
@@ -80,10 +81,11 @@ func calculateEachItemTotalPrice() {
 
 }
 
-func calculateAllTotal() {
+func calculateAllTotal() float64 {
 	for i := 0; i < len(product); i++ {
 		subTotal += total[i]
 	}
+	return subTotal
 }
 
 func calculateDiscountAmount() float64 {
@@ -98,7 +100,7 @@ func calculateVat() float64 {
 	return vat
 }
 
-func getBillTotal() float64{
+func getBillTotal() float64 {
 	billTotal = (subTotal - calculateDiscountAmount()) + calculateVat()
 	return billTotal
 }
@@ -136,22 +138,22 @@ func printFirstReceiptAfterTheCustomerPaid() {
 
 	==================================================================================
 
-`, subTotal, calculateDiscountAmount(), calculateVat(), billTotal, billTotal)
+`, calculateAllTotal(), calculateDiscountAmount(), calculateVat(), getBillTotal(), getBillTotal())
 }
 
-func amountUserPaid() float64{
+func amountUserPaid() float64 {
 	fmt.Print("How much did the user give to you? ")
 	fmt.Scan(&amountPaid)
-	return  amountPaid
+	return amountPaid
 
 }
 
-func  getBalance() float64 {
-	balance = amountUserPaid() - getBillTotal();
+func getBalance() float64 {
+	balance = amountUserPaid() - getBillTotal()
 	return balance
 }
 
-func printPaymentReceipt()  {
+func printPaymentReceipt() {
 	fmt.Printf(`
 	SEMICOLON STORES +
 	MAIN BRANCH
@@ -192,18 +194,6 @@ func printPaymentReceipt()  {
 
 	==================================================================================
 
-	
+
+`, calculateAllTotal(), calculateDiscountAmount(), calculateVat(), getBillTotal(), amountUserPaid(), getBalance())
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
