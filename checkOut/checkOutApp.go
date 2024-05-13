@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strings"
+	"time"
 )
 
 var product []string
@@ -11,17 +12,25 @@ var price []float64
 var total []float64
 
 var customerName string
+var discount1 float64
+
 var amountPaid float64
 var balance float64
 var cashierName string
 var subTotal float64
 var discount float64
 var discountedPrice float64
+var vat float64
 var billTotal float64
 
 func main() {
 	collectInput()
 	calculateEachItemTotalPrice()
+	calculateAllTotal()
+	calculateDiscountAmount()
+	calculateVat()
+	getBillTotal()
+	printFirstReceiptAfterTheCustomerPaid()
 
 }
 
@@ -67,3 +76,82 @@ func calculateEachItemTotalPrice() {
 	}
 
 }
+
+func calculateAllTotal() {
+	for i := 0; i < len(product); i++ {
+		subTotal += total[i]
+	}
+}
+
+func calculateDiscountAmount() float64 {
+	discount = (discount / 100) * subTotal
+	discount1 = subTotal - discount
+	return discount1
+
+}
+
+func calculateVat() float64 {
+	vat = (17.50 / 100) * subTotal
+	return vat
+}
+
+func getBillTotal() {
+	billTotal = (subTotal - calculateDiscountAmount()) + calculateVat()
+
+}
+
+func printFirstReceiptAfterTheCustomerPaid() {
+	fmt.Printf(`
+	SEMICOLON STORES +
+	MAIN BRANCH
+	LOCATION:312, HERBERT MACAULAY WAY, sABO yABA, LAGOS.
+	TEL:08364537281
+	Date:%s%n
+
+`, time.Now())
+	fmt.Printf("Cashier:%s\n customerName:%s\n", cashierName, customerName)
+	fmt.Println("====================================================================")
+	fmt.Printf("		%5s%12s%9s%12s\n\n", "ITEMS", "QUANTITY", "PRICE", " TOTAL")
+	fmt.Println("---------------------------------------------------------------------")
+	for i, prod := range product {
+		fmt.Printf("        %s%9d%9.2f%12.2f\n\n", prod, quantity[i], price[i], total[i])
+	}
+	fmt.Println("---------------------------------------------------------------------")
+
+	fmt.Printf(`
+	sub total : %.2f
+	
+	discount: %.2f
+
+	VAT @ 17.50: %.2f
+
+	bill total : %.2f
+
+	==================================================================================
+
+			THIS IS NOT A RECEIPT KINDLY PAY %.2f
+
+	==================================================================================
+
+`, subTotal, discount, vat(), billTotal, billTotal)
+
+}
+
+//System.out.printf("""
+//
+//Sub total: %.2f
+//
+//Discount: %.2f
+//
+//VAT @ 17.50: %.2f
+//
+//
+//Bill total: %.2f
+//
+//==================================================================================
+//
+//THIS IS NOT A RECEIPT KINDLY PAY %.2f
+//==================================================================================
+//
+//""", subTotal, discount, vat, billTotal, billTotal);
+//
