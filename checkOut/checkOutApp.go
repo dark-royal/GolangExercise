@@ -8,21 +8,25 @@ import (
 
 type Product struct {
 	ProductName string
-	quantity    int
+	quantity    float64
 	price       float64
 	total       float64
 }
 
-var customerName string
-var discount1 float64
+var (
+	customerName string
+	discount1    float64
 
-var amountPaid float64
-var balance float64
-var cashierName string
-var subTotal float64
-var discount float64
-var vat float64
-var billTotal float64
+	amountPaid  float64
+	balance     float64
+	cashierName string
+	subTotal    float64
+	discount    float64
+	vat         float64
+	billTotal   float64
+)
+
+var products []Product
 
 func main() {
 	collectInput()
@@ -40,50 +44,74 @@ func main() {
 
 func collectInput() {
 	fmt.Println("What is the customer name: ")
-	fmt.Scan(&customerName)
+	_, err2 := fmt.Scan(&customerName)
+	if err2 != nil {
+		return
+	}
 
 	var moreItem string
 	fmt.Println("What did the user buy?")
 	var userProduct string
-	fmt.Scan(&userProduct)
-	product = append(product, userProduct)
+	_, err := fmt.Scan(&userProduct)
+	if err != nil {
+		return
+	}
 
 	fmt.Println("What is the quantity of what you want to buy?")
 	var userQuantity int
-	fmt.Scan(&userQuantity)
-	quantity = append(quantity, userQuantity)
+	_, err = fmt.Scan(&userQuantity)
+	if err != nil {
+		return
+	}
 
 	fmt.Println("How much per unit?")
 	var productPrice float64
-	fmt.Scan(&productPrice)
-	price = append(price, productPrice)
+	_, err = fmt.Scan(&productPrice)
+	if err != nil {
+		return
+	}
+
+	product := Product{ProductName: userProduct, quantity: float64(userQuantity), price: productPrice}
+	products = append(products, product)
 
 	fmt.Println("Do you want to add more item?")
-	fmt.Scan(&moreItem)
+	_, err2 = fmt.Scan(&moreItem)
+	if err2 != nil {
+		return
+	}
 	for {
 		if strings.ToLower(moreItem) == "yes" {
 			break
 		}
 	}
 	fmt.Println("What is the cashier name")
-	fmt.Scan(&cashierName)
+	_, err = fmt.Scan(&cashierName)
+	if err != nil {
+		return
+	}
 
 	fmt.Println("How much discount will he get?")
-	fmt.Scan(&discount)
-
-}
-
-func calculateEachItemTotalPrice() {
-	for i := 0; i < len(product); i++ {
-		total = append(total, float64(quantity[i])*price[i])
-
+	_, err = fmt.Scan(&discount)
+	if err != nil {
+		fmt.Println("invalid")
+		return
 	}
 
 }
 
+func calculateEachItemTotalPrice() float64 {
+	var total float64
+	for _, product := range products {
+		total += product.price * product.quantity
+
+	}
+	return total
+
+}
+
 func calculateAllTotal() float64 {
-	for i := 0; i < len(product); i++ {
-		subTotal += total[i]
+	for _, product := range products {
+		subTotal += product.total
 	}
 	return subTotal
 }
@@ -118,8 +146,8 @@ func printFirstReceiptAfterTheCustomerPaid() {
 	fmt.Println("====================================================================")
 	fmt.Printf("		%5s%12s%9s%12s\n\n", "ITEMS", "QUANTITY", "PRICE", " TOTAL")
 	fmt.Println("---------------------------------------------------------------------")
-	for i, prod := range product {
-		fmt.Printf("        %s%9d%9.2f%12.2f\n\n", prod, quantity[i], price[i], total[i])
+	for _, prod := range products {
+		fmt.Printf("        %s%9d%9.2f%12.2f\n\n", prod.ProductName, prod.quantity, prod.price, prod.total)
 	}
 	fmt.Println("---------------------------------------------------------------------")
 
@@ -166,8 +194,8 @@ func printPaymentReceipt() {
 	fmt.Println("====================================================================")
 	fmt.Printf("		%5s%12s%9s%12s\n\n", "ITEMS", "QUANTITY", "PRICE", " TOTAL")
 	fmt.Println("---------------------------------------------------------------------")
-	for i, prod := range product {
-		fmt.Printf("        %s%9d%9.2f%12.2f\n\n", prod, quantity[i], price[i], total[i])
+	for _, prod := range products {
+		fmt.Printf("        %s%9d%9.2f%12.2f\n\n", prod.ProductName, prod.quantity, prod.price, prod.total)
 	}
 	fmt.Println("---------------------------------------------------------------------")
 
